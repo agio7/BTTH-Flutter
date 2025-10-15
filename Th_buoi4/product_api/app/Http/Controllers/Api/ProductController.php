@@ -22,8 +22,9 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([ // [cite: 97]
-            'name' => 'required|string|max:255', // [cite: 98]
-            'price' => 'required|numeric', // [cite: 99]
+            'name' => 'required|string|max:255|unique:products,name', // [cite: 98]
+            'description' => 'nullable|string|max:500',
+            'price' => 'required|numeric|min:0', // [cite: 99]
         ]);
 
         $product = Product::create($request->all()); // [cite: 102, 103]
@@ -45,8 +46,9 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $request->validate([ // [cite: 113]
-            'name' => 'string|max:255', // [cite: 115]
-            'price' => 'numeric', // [cite: 116]
+            'name' => 'sometimes|string|max:255|unique:products,name,' . $product->id, // [cite: 115]
+            'description' => 'sometimes|nullable|string|max:500',
+            'price' => 'sometimes|numeric|min:0', // [cite: 116]
         ]);
 
         $product->update($request->all()); // [cite: 117]
